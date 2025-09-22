@@ -12,7 +12,7 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Protected Route Component
+// Protected Route (only for logged-in users)
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -30,7 +30,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return user ? <>{children}</> : <Navigate to="/auth" replace />;
 };
 
-// Public Route Component (redirect to dashboard if authenticated)
+// Public Route (redirect to dashboard if already logged in)
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -57,35 +57,38 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route 
-                path="/" 
-                element={<Navigate to="/dashboard" replace />} 
-              />
-              <Route 
-                path="/auth" 
+              {/* Default: redirect root to dashboard */}
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+              {/* Public Auth page (Login/Signup) */}
+              <Route
+                path="/auth"
                 element={
                   <PublicRoute>
-                    <Auth />
+                    <Auth /> {/* renders AuthForm with toggle */}
                   </PublicRoute>
-                } 
+                }
               />
-              <Route 
-                path="/dashboard" 
+
+              {/* Protected pages */}
+              <Route
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
                     <Dashboard />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/leaderboard" 
+              <Route
+                path="/leaderboard"
                 element={
                   <ProtectedRoute>
                     <Leaderboard />
                   </ProtectedRoute>
-                } 
+                }
               />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+              {/* Catch-all for 404s */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
