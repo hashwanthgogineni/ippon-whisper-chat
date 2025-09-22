@@ -5,8 +5,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useToast } from '@/hooks/use-toast';
-import { MessageSquare, Chrome } from 'lucide-react';
+import { Chrome, Moon, Sun } from 'lucide-react';
+import ipponLogo from '@/assets/ippon-logo.png';
 
 interface AuthFormProps {
   mode: 'login' | 'signup';
@@ -18,6 +20,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const { toast } = useToast();
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -69,23 +72,46 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="bg-primary text-primary-foreground p-3 rounded-full">
-              <MessageSquare className="h-8 w-8" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative">
+      {/* Theme Toggle Button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 p-3 hover:bg-accent"
+        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      >
+        {theme === 'light' ? (
+          <Moon className="h-5 w-5" />
+        ) : (
+          <Sun className="h-5 w-5" />
+        )}
+      </Button>
+
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="text-center pb-6">
+          <div className="flex justify-center mb-6">
+            <div className="relative">
+              <img 
+                src={ipponLogo} 
+                alt="Ippon Whisper Logo" 
+                className="h-16 w-16 object-contain"
+              />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Ippon Whisper</CardTitle>
-          <CardDescription>
-            {mode === 'login' ? 'Welcome back' : 'Create your account'}
+          <CardTitle className="text-3xl font-bold text-foreground mb-2">
+            Ippon Whisper
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
+            {mode === 'login' ? 'Welcome back to the community' : 'Join our communication platform'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <form onSubmit={handleEmailAuth} className="space-y-4">
+        <CardContent className="space-y-6 px-6 pb-6">
+          <form onSubmit={handleEmailAuth} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                Email address
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -93,11 +119,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="focus-ring"
+                className="focus-ring h-11 px-4 bg-background border-input"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -105,20 +133,26 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="focus-ring"
+                className="focus-ring h-11 px-4 bg-background border-input"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Sign Up'}
+            <Button 
+              type="submit" 
+              className="w-full h-11 text-base font-medium" 
+              disabled={loading}
+            >
+              {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
             </Button>
           </form>
 
-          <div className="relative">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <Separator className="w-full" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-3 text-muted-foreground font-medium">
+                Or continue with
+              </span>
             </div>
           </div>
 
@@ -126,22 +160,22 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
             variant="outline"
             onClick={handleGoogleAuth}
             disabled={loading}
-            className="w-full"
+            className="w-full h-11 text-base font-medium border-input hover:bg-accent"
           >
-            <Chrome className="mr-2 h-4 w-4" />
-            Google
+            <Chrome className="mr-3 h-5 w-5" />
+            Continue with Google
           </Button>
 
-          <div className="text-center text-sm">
+          <div className="text-center text-sm pt-4">
             <span className="text-muted-foreground">
               {mode === 'login' ? "Don't have an account?" : "Already have an account?"}
             </span>
             <Button
               variant="link"
               onClick={onToggleMode}
-              className="ml-1 p-0 h-auto text-primary"
+              className="ml-2 p-0 h-auto text-primary hover:text-primary-hover font-medium"
             >
-              {mode === 'login' ? 'Sign up' : 'Sign in'}
+              {mode === 'login' ? 'Sign up here' : 'Sign in here'}
             </Button>
           </div>
         </CardContent>
