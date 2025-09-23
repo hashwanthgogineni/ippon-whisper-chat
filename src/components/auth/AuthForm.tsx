@@ -88,7 +88,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
         )}
       </Button>
 
-      <Card className="w-full max-w-md shadow-lg">
+      <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="text-center pb-6">
           <div className="flex justify-center mb-6">
             <div className="relative">
@@ -103,10 +103,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
             Ippon Whisper
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            {mode === 'login' ? 'Welcome back to the community' : 'Join our communication platform'}
+            {mode === 'login' ? 'Shh… don’t tell slack you’re here.' : 'Join our communication platform'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6 px-6 pb-6">
+        <CardContent className="space-y-6 px-12 pb-12">
           <form onSubmit={handleEmailAuth} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium text-foreground">

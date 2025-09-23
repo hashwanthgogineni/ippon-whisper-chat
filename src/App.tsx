@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Dashboard from "./pages/Dashboard";
-import Leaderboard from "./pages/Leaderboard";
+// import Leaderboard from "./pages/Leaderboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -80,12 +80,12 @@ const App = () => (
                 }
               />
               <Route
-                path="/leaderboard"
-                element={
-                  <ProtectedRoute>
-                    <Leaderboard />
-                  </ProtectedRoute>
-                }
+                // path="/leaderboard"
+                // element={
+                //   <ProtectedRoute>
+                //     <Leaderboard />
+                //   </ProtectedRoute>
+                // }
               />
 
               {/* Catch-all for 404s */}

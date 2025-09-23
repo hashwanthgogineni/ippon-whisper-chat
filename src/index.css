@@ -21,11 +21,11 @@ All colors MUST be HSL. Inspired by Facebook's clean aesthetic.
     --popover: 0 0% 100%;
     --popover-foreground: 213 16% 18%;
 
-    /* Primary - Facebook-inspired blue */
-    --primary: 214 84% 45%;
-    --primary-foreground: 0 0% 100%;
-    --primary-hover: 214 84% 40%;
-    --primary-light: 214 84% 92%;
+    /* Primary - Ippon-inspired blue */
+    --primary: 220 100% 33%;          /* Ippon blue */
+    --primary-foreground: 0 0% 100%;  /* white text */
+    --primary-hover: 220 100% 28%;    /* darker blue */
+    --primary-light: 220 100% 85%;  
 
     /* Secondary - Light gray backgrounds */
     --secondary: 214 13% 97%;
@@ -92,10 +92,10 @@ All colors MUST be HSL. Inspired by Facebook's clean aesthetic.
     --popover: 213 25% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 214 84% 45%;
+    --primary: 220 100% 33%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 214 84% 50%;
-    --primary-light: 214 84% 12%;
+    --primary-hover: 220 100% 40%;
+    --primary-light: 220 100% 15%;
 
     --secondary: 213 25% 15%;
     --secondary-foreground: 0 0% 98%;
