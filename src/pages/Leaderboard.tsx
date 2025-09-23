@@ -26,8 +26,8 @@ const Leaderboard: React.FC = () => {
       posts.forEach(post => {
         const existing = statsMap.get(post.userId) || {
           userId: post.userId,
-          userName: post.userName,
-          userEmail: post.userEmail,
+          userName: 'Anonymous User',
+          userEmail: 'anonymous@user.com',
           totalLikes: 0,
           totalPosts: 0,
           totalComments: 0,
@@ -126,7 +126,6 @@ const Leaderboard: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 {userStats.slice(0, 3).map((user, index) => {
                   const rank = index + 1;
-                  const userInitials = user.userName.substring(0, 2).toUpperCase();
                   
                   return (
                     <Card key={user.userId} className={`relative overflow-hidden ${rank === 1 ? 'md:order-2 transform md:scale-105' : rank === 2 ? 'md:order-1' : 'md:order-3'}`}>
@@ -137,14 +136,14 @@ const Leaderboard: React.FC = () => {
                         </div>
                         <Avatar className="w-16 h-16 mx-auto mb-4">
                           <AvatarFallback className="bg-primary text-primary-foreground text-lg font-bold">
-                            {userInitials}
+                            AN
                           </AvatarFallback>
                         </Avatar>
                         <h3 className="font-bold text-lg text-foreground mb-1">
-                          {user.userName}
+                          Anonymous User #{rank}
                         </h3>
                         <p className="text-sm text-muted-foreground mb-4 truncate">
-                          {user.userEmail}
+                          Anonymous Contributor
                         </p>
                         <div className="flex justify-center">
                           <Badge variant="secondary" className="text-lg font-bold px-3 py-1">
@@ -185,7 +184,6 @@ const Leaderboard: React.FC = () => {
                   <div className="space-y-3">
                     {userStats.slice(3).map((user, index) => {
                       const rank = index + 4;
-                      const userInitials = user.userName.substring(0, 2).toUpperCase();
                       
                       return (
                         <div key={user.userId} className="flex items-center space-x-4 p-3 rounded-lg interactive-hover">
@@ -194,12 +192,12 @@ const Leaderboard: React.FC = () => {
                           </div>
                           <Avatar className="w-10 h-10">
                             <AvatarFallback className="bg-muted text-muted-foreground font-semibold">
-                              {userInitials}
+                              AN
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
-                            <h4 className="font-semibold text-foreground">{user.userName}</h4>
-                            <p className="text-sm text-muted-foreground truncate">{user.userEmail}</p>
+                            <h4 className="font-semibold text-foreground">Anonymous User #{rank}</h4>
+                            <p className="text-sm text-muted-foreground truncate">Anonymous Contributor</p>
                           </div>
                           <div className="text-right">
                             <Badge variant="outline" className="mb-1">
@@ -222,7 +220,6 @@ const Leaderboard: React.FC = () => {
               <div className="space-y-4">
                 {userStats.map((user, index) => {
                   const rank = index + 1;
-                  const userInitials = user.userName.substring(0, 2).toUpperCase();
                   
                   return (
                     <Card key={user.userId} className="relative overflow-hidden">
@@ -234,12 +231,12 @@ const Leaderboard: React.FC = () => {
                           </div>
                           <Avatar className="w-12 h-12">
                             <AvatarFallback className="bg-primary text-primary-foreground font-bold">
-                              {userInitials}
+                              AN
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
-                            <h3 className="font-bold text-lg text-foreground">{user.userName}</h3>
-                            <p className="text-muted-foreground truncate">{user.userEmail}</p>
+                            <h3 className="font-bold text-lg text-foreground">Anonymous User #{rank}</h3>
+                            <p className="text-muted-foreground truncate">Anonymous Contributor</p>
                           </div>
                           <div className="text-right">
                             <Badge variant="secondary" className="text-lg font-bold px-3 py-1 mb-2">

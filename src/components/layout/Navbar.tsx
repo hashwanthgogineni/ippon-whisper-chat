@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { MessageSquare, Home, Trophy, Moon, Sun, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import ipponLogo from '@/assets/ippon-logo.png';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -21,8 +22,12 @@ export const Navbar: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/dashboard" className="flex items-center space-x-2">
-            <div className="bg-primary text-primary-foreground p-2 rounded-lg">
-              <MessageSquare className="h-6 w-6" />
+            <div className="relative">
+              <img 
+                src={ipponLogo} 
+                alt="Ippon Whisper Logo" 
+                className="h-10 w-10 object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-foreground">Ippon Whisper</span>
           </Link>

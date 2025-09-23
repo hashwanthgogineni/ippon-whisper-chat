@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">No posts yet</h3>
               <p className="text-muted-foreground mb-4">
-                Be the first to share something with the community!
+                Be the first to share something anonymously with the community!
               </p>
             </div>
           ) : (

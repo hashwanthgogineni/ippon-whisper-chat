@@ -31,15 +31,16 @@ export const usePosts = () => {
     return unsubscribe;
   }, []);
 
-  const createPost = async (content: string) => {
+  const createPost = async (content: string, imageUrl?: string) => {
     if (!user) return;
 
     try {
       await addDoc(collection(db, 'posts'), {
         userId: user.uid,
-        userName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
-        userEmail: user.email,
+        userName: 'Anonymous',
+        userEmail: 'anonymous@user.com',
         content,
+        imageUrl: imageUrl || null,
         timestamp: serverTimestamp(),
         likes: [],
         likeCount: 0,
@@ -89,15 +90,15 @@ export const usePosts = () => {
     }
   };
 
-  const addComment = async (postId: string, content: string) => {
+  const addComment = async (postId: string, content: string, imageUrl?: string) => {
     if (!user) return;
 
     try {
       const comment: Omit<Comment, 'id'> = {
         postId,
         userId: user.uid,
-        userName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
-        userEmail: user.email || '',
+        userName: 'Anonymous',
+        userEmail: 'anonymous@user.com',
         content,
         timestamp: new Date(),
       };
