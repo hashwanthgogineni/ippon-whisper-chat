@@ -30,9 +30,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   // Generate consistent anonymous name based on post ID
   const generateAnonymousName = (postId: string) => {
     const names = [
-      'Anonymous Owl', 'Mystery Fox', 'Hidden Cat', 'Secret Bear', 'Unknown Wolf',
-      'Phantom Duck', 'Ghost Rabbit', 'Shadow Deer', 'Mystic Eagle', 'Silent Tiger',
-      'Quiet Lion', 'Stealth Panda', 'Ninja Koala', 'Masked Penguin', 'Veiled Dolphin'
+      'Whisperer'
     ];
     const hash = postId.split('').reduce((a, b) => {
       a = ((a << 5) - a) + b.charCodeAt(0);
@@ -75,17 +73,17 @@ export const PostCard: React.FC<PostCardProps> = ({
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2">
-              <h3 className="font-semibold text-foreground truncate">
+            <div className="flex flex-col">
+              <h3 className="font-semibold text-foreground leading-snug">
                 {anonymousName}
               </h3>
               <span className="text-xs text-muted-foreground">
                 {formatDistanceToNow(post.timestamp, { addSuffix: true })}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Anonymous User
-            </p>
+            {/* <p className="text-sm text-muted-foreground">
+              Anonymous
+            </p> */}
           </div>
         </div>
 

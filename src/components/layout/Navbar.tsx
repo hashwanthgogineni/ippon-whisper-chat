@@ -12,8 +12,8 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/dashboard', icon: Home, label: 'Home' },
-    { path: '/leaderboard', icon: Trophy, label: 'Leaderboard' },
+    // { path: '/dashboard', icon: Home, label: 'Home' },
+    // { path: '/leaderboard', icon: Trophy, label: 'Leaderboard' },
   ];
 
   return (
@@ -21,7 +21,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/dashboard" className="flex items-center space-x-2">
+          <div onClick={() => window.location.href = "/dashboard"} className="flex items-center space-x-2 cursor-pointer select-none">
             <div className="relative">
               <img 
                 src={ipponLogo} 
@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
               />
             </div>
             <span className="text-xl font-bold text-foreground">Ippon Whisper</span>
-          </Link>
+          </div>
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-1">
