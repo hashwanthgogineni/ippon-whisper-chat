@@ -12,7 +12,7 @@ import { formatDistanceToNow } from 'date-fns';
 interface PostCardProps {
   post: Post;
   onToggleLike: (postId: string, isLiked: boolean) => void;
-  onAddComment: (postId: string, content: string) => void;
+  onAddComment: (postId: string, content: string, imageUrl?: string) => void;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
@@ -26,7 +26,23 @@ export const PostCard: React.FC<PostCardProps> = ({
   const { user } = useAuth();
 
   const isLiked = user ? post.likes.includes(user.uid) : false;
-  const userInitials = post.userName.substring(0, 2).toUpperCase();
+  
+  // Generate consistent anonymous name based on post ID
+  const generateAnonymousName = (postId: string) => {
+    const names = [
+      'Anonymous Owl', 'Mystery Fox', 'Hidden Cat', 'Secret Bear', 'Unknown Wolf',
+      'Phantom Duck', 'Ghost Rabbit', 'Shadow Deer', 'Mystic Eagle', 'Silent Tiger',
+      'Quiet Lion', 'Stealth Panda', 'Ninja Koala', 'Masked Penguin', 'Veiled Dolphin'
+    ];
+    const hash = postId.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    return names[Math.abs(hash) % names.length];
+  };
+
+  const anonymousName = generateAnonymousName(post.id);
+  const userInitials = anonymousName.split(' ').map(word => word[0]).join('').toUpperCase();
 
   const handleLike = () => {
     if (user) {
@@ -61,14 +77,14 @@ export const PostCard: React.FC<PostCardProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2">
               <h3 className="font-semibold text-foreground truncate">
-                {post.userName}
+                {anonymousName}
               </h3>
               <span className="text-xs text-muted-foreground">
                 {formatDistanceToNow(post.timestamp, { addSuffix: true })}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground truncate">
-              {post.userEmail}
+            <p className="text-sm text-muted-foreground">
+              Anonymous User
             </p>
           </div>
         </div>
@@ -78,6 +94,19 @@ export const PostCard: React.FC<PostCardProps> = ({
           <p className="text-foreground whitespace-pre-wrap leading-relaxed">
             {post.content}
           </p>
+          {post.imageUrl && (
+            <div className="mt-3">
+              <img
+                src={post.imageUrl}
+                alt="Post content"
+                className="max-w-full rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => window.open(post.imageUrl, '_blank')}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Engagement Stats */}
@@ -136,7 +165,7 @@ export const PostCard: React.FC<PostCardProps> = ({
               <form onSubmit={handleComment} className="flex items-start space-x-3">
                 <Avatar className="flex-shrink-0 w-8 h-8">
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                    {(user.displayName || user.email?.split('@')[0] || 'A').substring(0, 2).toUpperCase()}
+                    AN
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
@@ -171,14 +200,14 @@ export const PostCard: React.FC<PostCardProps> = ({
                 <div key={comment.id} className="flex items-start space-x-3">
                   <Avatar className="flex-shrink-0 w-8 h-8">
                     <AvatarFallback className="bg-muted text-muted-foreground text-xs">
-                      {comment.userName.substring(0, 2).toUpperCase()}
+                      AN
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="bg-muted rounded-lg p-3">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="font-semibold text-sm text-foreground">
-                          {comment.userName}
+                          Anonymous User
                         </span>
                         <span className="text-xs text-muted-foreground">
                           {formatDistanceToNow(comment.timestamp, { addSuffix: true })}

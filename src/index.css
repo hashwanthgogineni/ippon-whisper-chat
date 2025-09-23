@@ -22,10 +22,10 @@ All colors MUST be HSL. Inspired by Facebook's clean aesthetic.
     --popover-foreground: 213 16% 18%;
 
     /* Primary - Facebook-inspired blue */
-    --primary: 214 84% 56%;
+    --primary: 214 84% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 214 84% 50%;
-    --primary-light: 214 84% 96%;
+    --primary-hover: 214 84% 40%;
+    --primary-light: 214 84% 92%;
 
     /* Secondary - Light gray backgrounds */
     --secondary: 214 13% 97%;
@@ -72,12 +72,12 @@ All colors MUST be HSL. Inspired by Facebook's clean aesthetic.
     /* Sidebar specific */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 213 16% 18%;
-    --sidebar-primary: 214 84% 56%;
+    --sidebar-primary: 214 84% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 214 13% 97%;
     --sidebar-accent-foreground: 213 16% 18%;
     --sidebar-border: 214 13% 91%;
-    --sidebar-ring: 214 84% 56%;
+    --sidebar-ring: 214 84% 45%;
   }
 
   .dark {
@@ -92,10 +92,10 @@ All colors MUST be HSL. Inspired by Facebook's clean aesthetic.
     --popover: 213 25% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 214 84% 56%;
+    --primary: 214 84% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 214 84% 60%;
-    --primary-light: 214 84% 15%;
+    --primary-hover: 214 84% 50%;
+    --primary-light: 214 84% 12%;
 
     --secondary: 213 25% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -120,8 +120,8 @@ All colors MUST be HSL. Inspired by Facebook's clean aesthetic.
 
     --border: 213 25% 18%;
     --input: 213 25% 18%;
-    --input-focus: 214 84% 56%;
-    --ring: 214 84% 56%;
+    --input-focus: 214 84% 45%;
+    --ring: 214 84% 45%;
 
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
@@ -129,12 +129,12 @@ All colors MUST be HSL. Inspired by Facebook's clean aesthetic.
 
     --sidebar-background: 213 25% 8%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 214 84% 56%;
+    --sidebar-primary: 214 84% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 213 25% 15%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 213 25% 18%;
-    --sidebar-ring: 214 84% 56%;
+    --sidebar-ring: 214 84% 45%;
   }
 }
 

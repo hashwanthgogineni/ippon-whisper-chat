@@ -4,6 +4,7 @@ export interface Post {
   userName: string;
   userEmail: string;
   content: string;
+  imageUrl?: string;
   timestamp: Date;
   likes: string[]; // Array of user IDs who liked the post
   likeCount: number;
