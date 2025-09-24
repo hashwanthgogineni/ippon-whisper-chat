@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,10 +10,12 @@ import Dashboard from "./pages/Dashboard";
 // import Leaderboard from "./pages/Leaderboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import { WhisperBot } from "@/components/WhisperBot"; 
+import { Bot } from "lucide-react"; // 👈 new icon
 
 const queryClient = new QueryClient();
 
-// Protected Route (only for logged-in users)
+// Protected Route
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -30,7 +33,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return user ? <>{children}</> : <Navigate to="/auth" replace />;
 };
 
-// Public Route (redirect to dashboard if already logged in)
+// Public Route
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -48,54 +51,62 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return user ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              {/* Default: redirect root to dashboard */}
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+const App = () => {
+  const [showBot, setShowBot] = useState(false);
 
-              {/* Public Auth page (Login/Signup) */}
-              <Route
-                path="/auth"
-                element={
-                  <PublicRoute>
-                    <Auth /> {/* renders AuthForm with toggle */}
-                  </PublicRoute>
-                }
-              />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                {/* Default: redirect root to dashboard */}
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-              {/* Protected pages */}
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                // path="/leaderboard"
-                // element={
-                //   <ProtectedRoute>
-                //     <Leaderboard />
-                //   </ProtectedRoute>
-                // }
-              />
+                {/* Public Auth page */}
+                <Route
+                  path="/auth"
+                  element={
+                    <PublicRoute>
+                      <Auth />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* Catch-all for 404s */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+                {/* Protected pages */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Catch-all for 404s */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+
+              {/* 👇 Floating Bot Window */}
+              {showBot && <WhisperBot onClose={() => setShowBot(false)} />}
+
+              {/* 👇 Floating Toggle Button */}
+              <button
+                onClick={() => setShowBot((prev) => !prev)}
+                className="fixed bottom-5 right-5 bg-primary text-white rounded-full h-14 w-14 flex items-center justify-center shadow-lg hover:scale-110 transition"
+                aria-label="Toggle WhisperBot"
+              >
+                <Bot className="h-6 w-6" /> {/* simple robot icon */}
+              </button>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
