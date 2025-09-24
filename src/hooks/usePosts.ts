@@ -1,8 +1,19 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, updateDoc, doc, arrayUnion, arrayRemove, serverTimestamp } from 'firebase/firestore';
+import { 
+  collection, 
+  query, 
+  orderBy, 
+  onSnapshot, 
+  addDoc, 
+  updateDoc, 
+  doc, 
+  arrayUnion, 
+  arrayRemove, 
+  serverTimestamp 
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
-import { Post, Comment } from '@/types';
+import { Post } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
 export const usePosts = () => {
@@ -11,6 +22,7 @@ export const usePosts = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // 🔹 Fetch posts
   useEffect(() => {
     const postsQuery = query(
       collection(db, 'posts'),
@@ -31,20 +43,20 @@ export const usePosts = () => {
     return unsubscribe;
   }, []);
 
+  // 🔹 Create new post
   const createPost = async (content: string, imageUrl?: string) => {
     if (!user) return;
 
     try {
       await addDoc(collection(db, 'posts'), {
         userId: user.uid,
-        userName: 'Anonymous',
+        userName: 'Whisperer',
         userEmail: 'anonymous@user.com',
         content,
-        imageUrl: imageUrl || null,
+        imageUrl: imageUrl || null, // ✅ store direct URL
         timestamp: serverTimestamp(),
         likes: [],
         likeCount: 0,
-        comments: [],
         commentCount: 0,
       });
 
@@ -61,13 +73,13 @@ export const usePosts = () => {
     }
   };
 
+  // 🔹 Toggle like
   const toggleLike = async (postId: string, isLiked: boolean) => {
     if (!user) return;
 
     try {
       const postRef = doc(db, 'posts', postId);
       const post = posts.find(p => p.id === postId);
-      
       if (!post) return;
 
       if (isLiked) {
@@ -90,31 +102,27 @@ export const usePosts = () => {
     }
   };
 
-  const addComment = async (postId: string, content: string, imageUrl?: string) => {
+  // 🔹 Add comment
+  const addComment = async (postId: string, content: string) => {
     if (!user) return;
 
     try {
-      const comment: Omit<Comment, 'id'> = {
+      await addDoc(collection(db, 'posts', postId, 'comments'), {
         postId,
         userId: user.uid,
-        userName: 'Anonymous',
+        userName: 'Whisperer',
         userEmail: 'anonymous@user.com',
         content,
-        timestamp: new Date(),
-      };
+        timestamp: serverTimestamp(),
+      });
 
       const post = posts.find(p => p.id === postId);
-      if (!post) return;
-
-      const postRef = doc(db, 'posts', postId);
-      await updateDoc(postRef, {
-        comments: arrayUnion({
-          ...comment,
-          id: crypto.randomUUID(),
-          timestamp: serverTimestamp(),
-        }),
-        commentCount: post.commentCount + 1,
-      });
+      if (post) {
+        const postRef = doc(db, 'posts', postId);
+        await updateDoc(postRef, {
+          commentCount: (post.commentCount || 0) + 1,
+        });
+      }
 
       toast({
         title: "Comment added!",

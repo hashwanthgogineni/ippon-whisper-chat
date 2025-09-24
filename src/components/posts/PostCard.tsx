@@ -26,21 +26,9 @@ export const PostCard: React.FC<PostCardProps> = ({
   const { user } = useAuth();
 
   const isLiked = user ? post.likes.includes(user.uid) : false;
-  
-  // Generate consistent anonymous name based on post ID
-  const generateAnonymousName = (postId: string) => {
-    const names = [
-      'Whisperer'
-    ];
-    const hash = postId.split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-    return names[Math.abs(hash) % names.length];
-  };
 
-  const anonymousName = generateAnonymousName(post.id);
-  const userInitials = anonymousName.split(' ').map(word => word[0]).join('').toUpperCase();
+  const anonymousName = "Whisperer";
+  const userInitials = "AN";
 
   const handleLike = () => {
     if (user) {
@@ -81,9 +69,6 @@ export const PostCard: React.FC<PostCardProps> = ({
                 {formatDistanceToNow(post.timestamp, { addSuffix: true })}
               </span>
             </div>
-            {/* <p className="text-sm text-muted-foreground">
-              Anonymous
-            </p> */}
           </div>
         </div>
 
@@ -194,7 +179,7 @@ export const PostCard: React.FC<PostCardProps> = ({
 
             {/* Comments List */}
             <div className="space-y-3">
-              {post.comments.map((comment) => (
+              {post.comments?.map((comment) => (
                 <div key={comment.id} className="flex items-start space-x-3">
                   <Avatar className="flex-shrink-0 w-8 h-8">
                     <AvatarFallback className="bg-muted text-muted-foreground text-xs">
