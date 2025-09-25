@@ -4,15 +4,19 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyA4AMXAVXJXwZxpLFXoW3ctLqVDTjBZcAc",
-  authDomain: "ippon-whisper-app.firebaseapp.com",
-  projectId: "ippon-whisper-app",
-  storageBucket: "ippon-whisper-app.appspot.com", 
-  messagingSenderId: "344575813211",
-  appId: "1:344575813211:web:2fc560ab3ce22b1679417e",
-  measurementId: "G-TPYM446QWF"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
+
+console.log("Firebase ENV:", firebaseConfig); // debug
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
