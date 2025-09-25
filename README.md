@@ -1,11 +1,11 @@
-#  Ippon Whisper
+# 💭 Ippon Whisper
 
 > Say it loud… but stay anonymous.  
 > Share your thoughts, jokes, and secrets with a community wall — powered by **Whisper Witty Bot 🤖** that always has a clever comeback.
 
 ---
 
-##   What is Ippon Whisper?
+## 🎭 What is Ippon Whisper?
 
 Ippon Whisper is a modern **anonymous social wall** where users can:
 - 📝 Post text, images, and emojis anonymously  
