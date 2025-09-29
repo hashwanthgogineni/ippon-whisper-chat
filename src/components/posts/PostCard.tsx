@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -9,26 +9,48 @@ import { Post } from '@/types';
 import { Heart, MessageCircle, Send } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
+// Firestore imports
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+  doc,
+  increment
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase'; // adjust path to your firebase config
+
 interface PostCardProps {
   post: Post;
   onToggleLike: (postId: string, isLiked: boolean) => void;
-  onAddComment: (postId: string, content: string, imageUrl?: string) => void;
 }
 
-export const PostCard: React.FC<PostCardProps> = ({
-  post,
-  onToggleLike,
-  onAddComment,
-}) => {
+export const PostCard: React.FC<PostCardProps> = ({ post, onToggleLike }) => {
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [isCommenting, setIsCommenting] = useState(false);
+  const [comments, setComments] = useState<any[]>([]);
   const { user } = useAuth();
 
   const isLiked = user ? post.likes.includes(user.uid) : false;
 
-  const anonymousName = "Whisperer";
-  const userInitials = "AN";
+  const anonymousName = 'Whisperer';
+  const userInitials = 'W';
+
+  // 🔥 Always subscribe to comments so count is live
+  useEffect(() => {
+    const q = query(
+      collection(db, 'posts', post.id, 'comments'),
+      orderBy('timestamp', 'asc')
+    );
+    const unsub = onSnapshot(q, (snap) => {
+      setComments(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsub();
+  }, [post.id]);
 
   const handleLike = () => {
     if (user) {
@@ -36,18 +58,32 @@ export const PostCard: React.FC<PostCardProps> = ({
     }
   };
 
+  // 🔥 Add comment to Firestore and increment commentCount
   const handleComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim() || !user) return;
 
     setIsCommenting(true);
-    await onAddComment(post.id, newComment.trim());
+
+    // add comment doc
+    await addDoc(collection(db, 'posts', post.id, 'comments'), {
+      content: newComment.trim(),
+      timestamp: serverTimestamp(),
+      userId: user.uid,
+      userName: user.displayName || 'Whisperer',
+    });
+
+    // update commentCount field in post doc
+    await updateDoc(doc(db, 'posts', post.id), {
+      commentCount: increment(1),
+    });
+
     setNewComment('');
     setIsCommenting(false);
   };
 
   const toggleComments = () => {
-    setShowComments(!showComments);
+    setShowComments((prev) => !prev);
   };
 
   return (
@@ -93,19 +129,22 @@ export const PostCard: React.FC<PostCardProps> = ({
         </div>
 
         {/* Engagement Stats */}
-        {(post.likeCount > 0 || post.commentCount > 0) && (
+        {(post.likeCount > 0 || comments.length > 0) && (
           <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
             <div className="flex items-center space-x-4">
               {post.likeCount > 0 && (
-                <span>{post.likeCount} {post.likeCount === 1 ? 'like' : 'likes'}</span>
+                <span>
+                  {post.likeCount} {post.likeCount === 1 ? 'like' : 'likes'}
+                </span>
               )}
             </div>
-            {post.commentCount > 0 && (
+            {comments.length > 0 && (
               <button
                 onClick={toggleComments}
                 className="hover:text-foreground transition-colors"
               >
-                {post.commentCount} {post.commentCount === 1 ? 'comment' : 'comments'}
+                {comments.length}{' '}
+                {comments.length === 1 ? 'comment' : 'comments'}
               </button>
             )}
           </div>
@@ -120,7 +159,9 @@ export const PostCard: React.FC<PostCardProps> = ({
             size="sm"
             onClick={handleLike}
             className={`like-bounce flex items-center space-x-2 ${
-              isLiked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'
+              isLiked
+                ? 'text-red-500 hover:text-red-600'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
@@ -142,13 +183,13 @@ export const PostCard: React.FC<PostCardProps> = ({
         {showComments && (
           <div className="mt-4 space-y-3">
             <Separator />
-            
+
             {/* Add Comment Form */}
             {user && (
               <form onSubmit={handleComment} className="flex items-start space-x-3">
                 <Avatar className="flex-shrink-0 w-8 h-8">
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                    AN
+                    W
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
@@ -179,21 +220,26 @@ export const PostCard: React.FC<PostCardProps> = ({
 
             {/* Comments List */}
             <div className="space-y-3">
-              {post.comments?.map((comment) => (
+              {comments.map((comment) => (
                 <div key={comment.id} className="flex items-start space-x-3">
                   <Avatar className="flex-shrink-0 w-8 h-8">
                     <AvatarFallback className="bg-muted text-muted-foreground text-xs">
-                      AN
+                      W
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="bg-muted rounded-lg p-3">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="font-semibold text-sm text-foreground">
-                          Anonymous User
+                          {comment.userName || 'Whisperer'}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {formatDistanceToNow(comment.timestamp, { addSuffix: true })}
+                          {comment.timestamp?.seconds
+                            ? formatDistanceToNow(
+                                new Date(comment.timestamp.seconds * 1000),
+                                { addSuffix: true }
+                              )
+                            : ''}
                         </span>
                       </div>
                       <p className="text-sm text-foreground whitespace-pre-wrap">

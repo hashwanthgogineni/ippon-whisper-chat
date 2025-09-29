@@ -26,7 +26,6 @@ export const CreatePost: React.FC<CreatePostProps> = ({ onCreatePost }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Require either text, emoji, or image
     if (!content.trim() && !imageUrl.trim()) {
       toast({
         title: 'Empty post',
@@ -41,7 +40,6 @@ export const CreatePost: React.FC<CreatePostProps> = ({ onCreatePost }) => {
     try {
       await onCreatePost(content.trim() || '', imageUrl.trim() || undefined);
 
-      // Reset state
       setContent('');
       setImageUrl('');
       setShowImageInput(false);
@@ -68,7 +66,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ onCreatePost }) => {
 
   if (!user) return null;
 
-  const userInitials = 'AN'; // Always anonymous
+  const userInitials = 'W'; // Always anonymous
 
   return (
     <Card className="post-card mb-6">
@@ -82,10 +80,10 @@ export const CreatePost: React.FC<CreatePostProps> = ({ onCreatePost }) => {
             </Avatar>
             <div className="flex-1">
               <Textarea
-                placeholder="Share something anonymously... 😊"
+                placeholder="Share something anonymously here... 🤫"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="min-h-[80px] resize-none border-0 p-0 text-base placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="min-h-[80px] resize-none bg-transparent shadow-none border-none text-base placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                 maxLength={500}
               />
 
@@ -121,8 +119,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ onCreatePost }) => {
                           e.currentTarget.style.display = 'none';
                           toast({
                             title: 'Invalid image URL',
-                            description:
-                              'This link does not point to a valid image/GIF.',
+                            description: 'This link does not point to a valid image/GIF.',
                             variant: 'destructive',
                           });
                         }}
