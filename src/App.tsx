@@ -7,15 +7,14 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Dashboard from "./pages/Dashboard";
-// import Leaderboard from "./pages/Leaderboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { WhisperBot } from "@/components/WhisperBot"; 
-import { Bot } from "lucide-react"; // 👈 new icon
+import { Bot } from "lucide-react";
 
 const queryClient = new QueryClient();
 
-// Protected Route
+// 🔒 Protected Route
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -30,10 +29,11 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     );
   }
 
+  // if no user, go to auth page
   return user ? <>{children}</> : <Navigate to="/auth" replace />;
 };
 
-// Public Route
+// 🌐 Public Route
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -48,6 +48,7 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
   }
 
+  // if already logged in, redirect to dashboard
   return user ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
@@ -63,7 +64,7 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                {/* Default: redirect root to dashboard */}
+                {/* Default: redirect root (/) to dashboard */}
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
                 {/* Public Auth page */}
@@ -76,7 +77,7 @@ const App = () => {
                   }
                 />
 
-                {/* Protected pages */}
+                {/* Protected Dashboard page */}
                 <Route
                   path="/dashboard"
                   element={
@@ -86,7 +87,7 @@ const App = () => {
                   }
                 />
 
-                {/* Catch-all for 404s */}
+                {/* Catch-all for 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
 
@@ -99,7 +100,7 @@ const App = () => {
                 className="fixed bottom-5 right-5 bg-primary text-white rounded-full h-14 w-14 flex items-center justify-center shadow-lg hover:scale-110 transition"
                 aria-label="Toggle WhisperBot"
               >
-                <Bot className="h-6 w-6" /> {/* simple robot icon */}
+                <Bot className="h-6 w-6" />
               </button>
             </BrowserRouter>
           </TooltipProvider>
