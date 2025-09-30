@@ -14,7 +14,7 @@ import { Bot } from "lucide-react";
 
 const queryClient = new QueryClient();
 
-// 🔒 Protected Route
+// 🔒 Protected Route (only for signed-in users)
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -29,11 +29,10 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     );
   }
 
-  // if no user, go to auth page
   return user ? <>{children}</> : <Navigate to="/auth" replace />;
 };
 
-// 🌐 Public Route
+// 🌐 Public Route (only for guests)
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -48,7 +47,6 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
   }
 
-  // if already logged in, redirect to dashboard
   return user ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
@@ -64,10 +62,17 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                {/* Default: redirect root (/) to dashboard */}
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                {/* 👇 Root automatically sends to /dashboard or /auth */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Navigate to="/dashboard" replace />
+                    </ProtectedRoute>
+                  }
+                />
 
-                {/* Public Auth page */}
+                {/* Auth page (only for not logged in) */}
                 <Route
                   path="/auth"
                   element={
@@ -77,7 +82,7 @@ const App = () => {
                   }
                 />
 
-                {/* Protected Dashboard page */}
+                {/* Dashboard page (protected) */}
                 <Route
                   path="/dashboard"
                   element={
@@ -87,7 +92,7 @@ const App = () => {
                   }
                 />
 
-                {/* Catch-all for 404 */}
+                {/* Catch-all 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
 
