@@ -1,54 +1,20 @@
-import React, { useState } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import Dashboard from "./pages/Dashboard";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
-import { WhisperBot } from "@/components/WhisperBot"; 
+import ProtectedRoute from "@/routes/ProtectedRoute";
+import PublicRoute from "@/routes/PublicRoute";
 import { Bot } from "lucide-react";
 
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Auth = lazy(() => import("./pages/Auth"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const WhisperBot = lazy(() => import("@/components/WhisperBot").then(m => ({ default: m.WhisperBot })));
+
 const queryClient = new QueryClient();
-
-// 🔒 Protected Route (only for signed-in users)
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return user ? <>{children}</> : <Navigate to="/auth" replace />;
-};
-
-// 🌐 Public Route (only for guests)
-const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return user ? <Navigate to="/dashboard" replace /> : <>{children}</>;
-};
 
 const App = () => {
   const [showBot, setShowBot] = useState(false);
@@ -59,45 +25,52 @@ const App = () => {
         <AuthProvider>
           <TooltipProvider>
             <Toaster />
-            <Sonner />
             <BrowserRouter>
-              <Routes>
-                {/* 👇 Root automatically sends to /dashboard or /auth */}
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <Navigate to="/dashboard" replace />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Auth page (only for not logged in) */}
-                <Route
-                  path="/auth"
-                  element={
-                    <PublicRoute>
-                      <Auth />
-                    </PublicRoute>
-                  }
-                />
-
-                {/* Dashboard page (protected) */}
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Catch-all 404 */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center min-h-screen bg-background">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                      <p className="text-muted-foreground">Loading...</p>
+                    </div>
+                  </div>
+                }
+              >
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <Navigate to="/dashboard" replace />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/auth"
+                    element={
+                      <PublicRoute>
+                        <Auth />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
 
               {/* 👇 Floating Bot Window */}
-              {showBot && <WhisperBot onClose={() => setShowBot(false)} />}
+              {showBot && (
+                <Suspense fallback={null}>
+                  <WhisperBot onClose={() => setShowBot(false)} />
+                </Suspense>
+              )}
 
               {/* 👇 Floating Toggle Button */}
               <button

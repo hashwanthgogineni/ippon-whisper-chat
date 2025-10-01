@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth, provider } from "@/lib/firebase"; // renamed to `provider` for consistency
+import { auth, googleAuthProvider } from "@/lib/firebase";
 
 // Define the context type
 interface AuthContextType {
@@ -49,22 +49,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Email login
   const signInWithEmail = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      throw error;
+    }
   };
 
   // Email signup
   const signUpWithEmail = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      throw error;
+    }
   };
 
   // Google login
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, provider);
+    try {
+      await signInWithPopup(auth, googleAuthProvider);
+    } catch (error) {
+      throw error;
+    }
   };
 
   // Logout
   const logout = async () => {
-    await signOut(auth);
+    try {
+      await signOut(auth);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const value: AuthContextType = {

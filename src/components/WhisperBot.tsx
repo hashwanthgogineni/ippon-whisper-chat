@@ -65,10 +65,11 @@ Just return the final witty response.`,
 
   // 🔹 Handle send
   const handleSend = async () => {
-    if (!input.trim()) return;
+    const trimmed = input.trim();
+    if (!trimmed || loading) return;
 
-    setMessages((prev) => [...prev, { from: "user", text: input }]);
-    const userMessage = input;
+    setMessages((prev) => [...prev, { from: "user", text: trimmed }]);
+    const userMessage = trimmed;
     setInput("");
     setLoading(true);
 
@@ -131,7 +132,7 @@ Just return the final witty response.`,
               className="flex-1 bg-background text-foreground"
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
             />
-            <Button onClick={handleSend} disabled={loading}>
+            <Button onClick={handleSend} disabled={loading || !input.trim()}>
               {loading ? "..." : "Go"}
             </Button>
           </div>
