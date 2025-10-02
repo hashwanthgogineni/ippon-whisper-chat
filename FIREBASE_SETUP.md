@@ -64,7 +64,7 @@ service cloud.firestore {
 
 ## Backend Integration
 
-Since Lovable runs frontend-only, you'll need to set up your Flask backend separately:
+For backend integration, you'll need to set up your Flask backend separately:
 
 1. Create a Python virtual environment
 2. Install required packages (Flask, Firebase Admin SDK, etc.)
