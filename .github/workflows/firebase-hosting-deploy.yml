@@ -9,7 +9,6 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     env:
-      NPM_CONFIG_CACHE: ${{ runner.temp }}/npm-cache
       CI: true
 
     steps:
@@ -23,9 +22,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          rm -rf ~/.npm/_cacache/tmp || true
-          npm ci --no-audit --no-fund --cache $NPM_CONFIG_CACHE --prefer-offline
+        run: npm ci --no-audit --no-fund
 
       - name: Build project
         run: npm run build
