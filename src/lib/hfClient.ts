@@ -49,6 +49,6 @@ export async function generateSuggestion(prompt: string): Promise<string> {
     return response.data[0]?.generated_text || "🤖 Oops, I couldn't think of anything right now.";
   } catch (error) {
     console.error("HuggingFace API error:", error);
-    return "⚠️ WhisperBot had a glitch. Try again!";
+    return "⚠️ Service temporarily unavailable. Try again!";
   }
 }

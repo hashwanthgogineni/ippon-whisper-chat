@@ -24,6 +24,6 @@ export async function generateSuggestion(prompt: string) {
     }
   } catch (error) {
     console.error("HuggingFace API error:", error);
-    return "⚠️ WhisperBot had a glitch. Try again!";
+    return "⚠️ Service temporarily unavailable. Try again!";
   }
 }

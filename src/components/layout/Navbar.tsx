@@ -2,13 +2,12 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { MessageSquare, Home, Trophy, Moon, Sun, LogOut } from 'lucide-react';
+import { MessageSquare, Home, Trophy, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import ipponLogo from '@/assets/ippon-logo.png';
+import whisperLogo from '/whisper_logo.png';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
   const navItems = [
@@ -21,15 +20,14 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div onClick={() => window.location.href = "/dashboard"} className="flex items-center space-x-2 cursor-pointer select-none">
+          <div onClick={() => window.location.href = "/dashboard"} className="flex items-center cursor-pointer select-none">
             <div className="relative">
               <img 
-                src={ipponLogo} 
-                alt="Ippon Whisper Logo" 
-                className="h-10 w-10 object-contain"
+                src={whisperLogo} 
+                alt="Whisper Logo" 
+                className="h-12 w-auto object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-foreground">Ippon Whisper</span>
           </div>
 
           {/* Navigation Links */}
@@ -54,20 +52,6 @@ export const Navbar: React.FC = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-2">
-            {/* Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              className="p-2"
-            >
-              {theme === 'light' ? (
-                <Moon className="h-4 w-4" />
-              ) : (
-                <Sun className="h-4 w-4" />
-              )}
-            </Button>
-
             {/* User Info & Logout */}
             {user && (
               <>

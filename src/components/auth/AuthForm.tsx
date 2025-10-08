@@ -7,8 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useToast } from '@/hooks/use-toast';
-import { Chrome, Moon, Sun } from 'lucide-react';
-import ipponLogo from '@/assets/ippon-logo.png';
+import { Chrome } from 'lucide-react';
+import whisperLogo from '/whisper_logo.png';
 
 interface AuthFormProps {
   mode: 'login' | 'signup';
@@ -20,7 +20,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const { toast } = useToast();
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -38,7 +38,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
         await signUpWithEmail(email, password);
         toast({
           title: "Account created!",
-          description: "Welcome to Ippon Whisper.",
+          description: "Welcome to Whisper.",
         });
       }
     } catch (error: any) {
@@ -72,38 +72,20 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative">
-      {/* Theme Toggle Button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={toggleTheme}
-        className="absolute top-4 right-4 p-3 hover:bg-accent"
-        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      >
-        {theme === 'light' ? (
-          <Moon className="h-5 w-5" />
-        ) : (
-          <Sun className="h-5 w-5" />
-        )}
-      </Button>
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
 
       <Card className="w-full max-w-lg shadow-lg">
-        <CardHeader className="text-center pb-6">
-          <div className="flex justify-center mb-6">
+        <CardHeader className="text-center pb-1">
+          <div className="flex justify-center mb-3">
             <div className="relative">
               <img 
-                src={ipponLogo} 
-                alt="Ippon Whisper Logo" 
-                className="h-16 w-16 object-contain"
+                src={whisperLogo} 
+                alt="Whisper Logo" 
+                className="h-16 w-auto object-contain"
               />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold text-foreground mb-2">
-            Ippon Whisper
-          </CardTitle>
           <CardDescription className="text-muted-foreground">
-            {mode === 'login' ? 'Shh… don’t tell slack you’re here.' : 'Join our communication platform'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6 px-12 pb-12">
