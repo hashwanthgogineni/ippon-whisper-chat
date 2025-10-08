@@ -3,6 +3,8 @@
 > Say it loud… but stay anonymous.  
 > Share your thoughts, jokes, and secrets with a community wall
 
+🌐 **Live Demo**: [https://whisper-app-2024.web.app](https://whisper-app-2024.web.app)
+
 ---
 
 ## 🎭 What is Whisper?
